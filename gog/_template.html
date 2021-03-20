@@ -67,7 +67,6 @@
     <tr>
         <th>Games <span id="count"></span></th>
         <th>Genres</th>
-        <!--<th>Languages</th>-->
         <th>Works On</th>
     </tr>
     {{#each games}}
@@ -80,15 +79,6 @@
                 {{/each}}
             </ul>
         </td>
-        <!--
-        <td>
-            <ul class="languages">
-            {{#each languages}}
-            <li>{{this}}</li>
-            {{/each}}
-            </ul>
-        </td>
-        -->
         <td>
             <ul class="os">
             {{#if worksOn.Windows}}<li>Windows{{/if}}
