@@ -2,6 +2,7 @@ import Apify, {CheerioHandlePage} from 'apify'
 
 const {utils: {log}} = Apify;
 
+// items from https://www.gog.com/games/ajax/filtered
 interface GogGamesListItem {
     id: string;
     title: string;
@@ -20,6 +21,7 @@ interface GogGamesListItem {
     globalReleaseDate: number;
 }
 
+// result of https://www.gog.com/games/ajax/filtered
 interface GogGames {
     page: number;
     products: GogGamesListItem[],
@@ -27,6 +29,7 @@ interface GogGames {
     totalPages: number;
 }
 
+// result of https://api.gog.com/products/${game.id}
 export interface GogGameDetails {
     id: number;
     title: string;
@@ -65,7 +68,7 @@ export const handlePage: CheerioHandlePage = async ({request, $, json, crawler})
         }
 
         for (let game of result.products) {
-            const url = `https://api.gog.com/products/${game.id}?expand=description`
+            const url = `https://api.gog.com/products/${game.id}`
             requestQueue.addRequest({
                 url,
                 headers: {
