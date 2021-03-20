@@ -1,0 +1,27 @@
+# This is a basic workflow that is manually triggered
+
+name: Update GOG
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install dependencies
+      uses: bahmutov/npm-install@v1.6.0
+    - name: Crawl gog.com
+      run: npm start
+    - name: Rebuild HTML
+      run: npm build
+    - name: commit updated HTML
+      uses: EndBug/add-and-commit@v7
+      with:
+        add: 'gog/index.html'
+        message: 'updated GOG'
