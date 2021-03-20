@@ -1,6 +1,6 @@
 # Video Games by Language
 
-Not everyone speaks English. This is a tool for finding games in your preferred language.
+Not everyone speaks English. This is a tool for finding games in your preferred language. See https://bunkerbewohner.github.io/video-games-by-language/gog/.
 
 ## Usage
 
