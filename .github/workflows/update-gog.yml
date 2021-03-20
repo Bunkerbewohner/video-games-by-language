@@ -19,7 +19,7 @@ jobs:
     - name: Crawl gog.com
       run: npm start
     - name: Rebuild HTML
-      run: npm build
+      run: npm run-script build
     - name: commit updated HTML
       uses: EndBug/add-and-commit@v7
       with:
