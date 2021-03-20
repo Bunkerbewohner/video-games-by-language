@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GOG games by language</title>
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+    <script>
+        const activeLanguages = [];
+
+        function toggleLanguage() {
+            const selected = [...document.querySelectorAll('input[type=checkbox]:checked').values()].map(input => input.value);
+
+            let count = 0;
+
+            document.querySelectorAll("tr.game").forEach(tr => {
+                const show = selected.filter(lang => tr.hasAttribute(lang)).length > 0;
+                tr.style.display = show ? 'table-row' : 'none';
+
+                if (show) {
+                    count++;
+                }
+            })
+
+            document.querySelector('#count').innerHTML = `(${count})`;
+        }
+    </script>
+    <style>
+        html, body {
+            font-family: sans-serif;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        ul {
+            list-style-type: none;
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            display: inline-block;
+            margin: 0;
+            margin-right: 10px;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>GOG Games by language</h1>
+
+<header>
+{{#each languages}}
+    <label><input name="languages" onchange="toggleLanguage()" type="checkbox" value="{{code}}"/> {{lang}}</label>
+{{/each}}
+</header>
+
+<table>
+    <tr>
+        <th>Games <span id="count"></span></th>
+        <th>Genres</th>
+        <!--<th>Languages</th>-->
+        <th>Works On</th>
+    </tr>
+    {{#each games}}
+    <tr class="game" {{#each languageCodes}}{{this}} {{/each}} style="display: none;">
+        <td><a href="{{links.product_card}}">{{title}}</a></td>
+        <td>
+            <ul class="genres">
+                {{#each genres}}
+                <li>{{this}}</li>
+                {{/each}}
+            </ul>
+        </td>
+        <!--
+        <td>
+            <ul class="languages">
+            {{#each languages}}
+            <li>{{this}}</li>
+            {{/each}}
+            </ul>
+        </td>
+        -->
+        <td>
+            <ul class="os">
+            {{#if worksOn.Windows}}<li>Windows{{/if}}
+            {{#if worksOn.Mac}}<li>Mac{{/if}}
+            {{#if worksOn.Linux}}<li>Linux{{/if}}
+            </ul>
+        </td>
+    </tr>
+    {{/each}}
+</table>
+
+<p><b>Select a language to display games</b></p>
+
+</body>
+</html>

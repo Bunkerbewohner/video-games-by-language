@@ -1,0 +1,23 @@
+{
+	"name": "video-games-by-language",
+	"version": "0.0.1",
+	"description": "A tool for finding video games in your preferred language.",
+	"dependencies": {
+		"apify": "^1.0.1",
+		"handlebars": "^4.7.7"
+	},
+	"devDependencies": {
+		"@types/handlebars": "^4.1.0",
+		"@types/node": "^14.14.35",
+		"ts-node": "^9.1.1",
+		"typescript": "^4.2.3"
+	},
+	"scripts": {
+		"start": "ts-node main.ts",
+		"build": "ts-node build.ts",
+		"test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1"
+	},
+	"repository": "git@github.me:Bunkerbewohner/video-games-by-language.git",
+	"author": "Mathias Kahl",
+	"license": "MIT"
+}
