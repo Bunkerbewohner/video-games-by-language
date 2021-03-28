@@ -1,5 +1,5 @@
 import Apify from 'apify'
-import {handlePage} from './src/routes';
+import {handleGogPage} from './src/gog';
 
 const {utils: {log}} = Apify;
 
@@ -20,7 +20,7 @@ Apify.main(async () => {
         maxConcurrency: 50,
         handlePageFunction: async (context) => {
             const {url, userData: {label}} = context.request;
-            return handlePage(context);
+            return handleGogPage(context);
         },
     });
 

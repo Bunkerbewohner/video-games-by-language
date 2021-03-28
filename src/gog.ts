@@ -54,7 +54,7 @@ export interface GogGameDetails {
     }
 }
 
-export const handlePage: CheerioHandlePage = async ({request, $, json, crawler}) => {
+export const handleGogPage: CheerioHandlePage = async ({request, $, json, crawler}) => {
     const requestQueue = crawler.requestQueue;
 
     // Handle Start URLs
