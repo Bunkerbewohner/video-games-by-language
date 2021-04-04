@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Icelandic Video Games | Íslenska</title>
+    <script>
+        const games = [{"title":"Kingdom: New Lands","languages":{"br":"Português do Brasil","cn":"中文(简体)","da":"Dansk","de":"Deutsch","en":"English","es":"español","fi":"suomi","fr":"français","is":"Íslenska","it":"italiano","jp":"日本語","no":"norsk","pt":"português","ru":"русский","sv":"svenska"},"supportedAudioLanguages":[],"audioLanguages":[],"textLanguages":["br","cn","da","de","en","es","fi","fr","is","it","jp","no","pt","ru","sv"],"genres":["Strategie","Simulation","Fantasy"],"links":{"purchase_link":"https://www.gog.com/checkout/manual/1473737130","product_card":"https://www.gog.com/game/kingdom_new_lands","support":"https://www.gog.com/support/kingdom_new_lands","forum":"https://www.gog.com/forum/kingdom"},"wordsOn":{"Windows":true,"Mac":false,"Linux":true}},{"title":"Kingdom: New Lands Royal Edition","languages":{"br":"Português do Brasil","cn":"中文(简体)","da":"Dansk","de":"Deutsch","en":"English","es":"español","fi":"suomi","fr":"français","is":"Íslenska","it":"italiano","jp":"日本語","nl":"nederlands","no":"norsk","pt":"português","ru":"русский","sv":"svenska"},"supportedAudioLanguages":[],"audioLanguages":[],"textLanguages":["br","cn","da","de","en","es","fi","fr","is","it","jp","nl","no","pt","ru","sv"],"genres":["Strategie","Simulation","Fantasy"],"links":{"purchase_link":"https://www.gog.com/checkout/manual/1589477612","product_card":"https://www.gog.com/game/kingdom_new_lands_royal_edition","support":"https://www.gog.com/support/kingdom_new_lands_royal_edition","forum":"https://www.gog.com/forum/kingdom"},"wordsOn":{"Windows":true,"Mac":false,"Linux":true}},{"title":"Jotun: Valhalla Edition","languages":{"br":"Português do Brasil","cn":"中文(简体)","de":"Deutsch","en":"English","es":"español","fr":"français","is":"Íslenska","it":"italiano","jp":"日本語","pl":"polski","ru":"русский"},"supportedAudioLanguages":["Íslenska"],"audioLanguages":["is"],"textLanguages":["br","cn","de","en","es","fr","is","it","jp","pl","ru"],"genres":["Rollenspiel","Action","Fantasy"],"links":{"purchase_link":"https://www.gog.com/checkout/manual/1458127099","product_card":"https://www.gog.com/game/jotun","support":"https://www.gog.com/support/jotun","forum":"https://www.gog.com/forum/jotun_valhalla_edition"},"wordsOn":{"Windows":true,"Mac":true,"Linux":true}}];
+        const languageNameToCode = {"English":"en","中文(简体)":"cn","Deutsch":"de","español":"es","français":"fr","polski":"pl","русский":"ru","Português do Brasil":"br","italiano":"it","日本語":"jp","한국어":"ko","Español (AL)":"es_mx","中文(繁體)":"zh","português":"pt","nederlands":"nl","český":"cz","Dansk":"da","magyar":"hu","Türkçe":"tr","svenska":"sv","العربية":"ar","български":"bl","suomi":"fi","Ελληνικά":"gk","norsk":"no","română":"ro","ไทย":"th","yкраїнська":"uk","Српска":"sb","slovenský":"sk","беларуская":"be","català":"ca","עברית":"he","Íslenska":"is","فارسی":"fa","Inuktitut":"gog_IN"};
+        const codeToLanguageName = Object.assign({}, ...Object.entries(languageNameToCode).map(([a,b]) => ({ [b]: a })));
+        let textLanguages = [];
+        let audioLanguages = [];
+
+        function updateCount() {
+            const count = games.filter(supportsSelectedLanguages).length;
+            document.querySelector('#count').innerHTML = `(${count})`;
+        }
+
+        function supportsSelectedLanguages(game) {
+            const supportsSomeTextLanguages = textLanguages.filter(lang => Object.keys(game.languages).indexOf(lang) >= 0).length > 0;
+            const supportsSomeAudioLanguages = audioLanguages.filter(code => game.supportedAudioLanguages.indexOf(codeToLanguageName[code]) >= 0).length > 0;
+
+            if (textLanguages.length > 0 && audioLanguages.length > 0) {
+                return supportsSomeTextLanguages || supportsSomeAudioLanguages;
+            } else if (textLanguages.length > 0) {
+                return supportsSomeTextLanguages;
+            } else if (audioLanguages.length > 0) {
+                return supportsSomeAudioLanguages;
+            } else {
+                return true;
+            }
+        }
+
+        function toggleLanguage() {
+            textLanguages = [...document.querySelectorAll('input.text[type=checkbox]:checked').values()]
+                .map(input => input.value);
+            audioLanguages = [...document.querySelectorAll('input.audio[type=checkbox]:checked').values()]
+                .map(input => input.value);
+
+            // count games who support at least one of the selected languages
+            updateCount();
+
+            // only display games that support one of the selected languages
+            const textClass = textLanguages.map(l => `text-${l}`).join(" ");
+            const audioClass = audioLanguages.map(l => `audio-${l}`).join(" ");
+            document.querySelector("table").className = (textClass || audioClass) ? (textClass + " " + audioClass) : "all";
+        }
+    </script>
+    <style>
+        html {
+            overflow: scroll-y;
+        }
+
+        html, body {
+            font-family: sans-serif;
+        }
+
+        label {
+            padding: 4px 8px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        label:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        ul {
+            list-style-type: none;
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            display: inline-block;
+            margin: 0 10px 0 0;
+            padding: 0;
+        }
+
+        a.gh {
+            float: right;
+            font-size: 1rem;
+            padding: 5px;
+        }
+
+        tbody tr {
+            display: none;
+        }
+
+        tbody tr:nth-child(2n) {
+            background-color: #eee;
+        }
+
+        table.text-en tr.text-en, table.audio-en tr.audio-en, table.text-cn tr.text-cn, table.audio-cn tr.audio-cn, table.text-de tr.text-de, table.audio-de tr.audio-de, table.text-es tr.text-es, table.audio-es tr.audio-es, table.text-fr tr.text-fr, table.audio-fr tr.audio-fr, table.text-pl tr.text-pl, table.audio-pl tr.audio-pl, table.text-ru tr.text-ru, table.audio-ru tr.audio-ru, table.text-br tr.text-br, table.audio-br tr.audio-br, table.text-it tr.text-it, table.audio-it tr.audio-it, table.text-jp tr.text-jp, table.audio-jp tr.audio-jp, table.text-ko tr.text-ko, table.audio-ko tr.audio-ko, table.text-es_mx tr.text-es_mx, table.audio-es_mx tr.audio-es_mx, table.text-zh tr.text-zh, table.audio-zh tr.audio-zh, table.text-pt tr.text-pt, table.audio-pt tr.audio-pt, table.text-nl tr.text-nl, table.audio-nl tr.audio-nl, table.text-cz tr.text-cz, table.audio-cz tr.audio-cz, table.text-da tr.text-da, table.audio-da tr.audio-da, table.text-hu tr.text-hu, table.audio-hu tr.audio-hu, table.text-tr tr.text-tr, table.audio-tr tr.audio-tr, table.text-sv tr.text-sv, table.audio-sv tr.audio-sv, table.text-ar tr.text-ar, table.audio-ar tr.audio-ar, table.text-bl tr.text-bl, table.audio-bl tr.audio-bl, table.text-fi tr.text-fi, table.audio-fi tr.audio-fi, table.text-gk tr.text-gk, table.audio-gk tr.audio-gk, table.text-no tr.text-no, table.audio-no tr.audio-no, table.text-ro tr.text-ro, table.audio-ro tr.audio-ro, table.text-th tr.text-th, table.audio-th tr.audio-th, table.text-uk tr.text-uk, table.audio-uk tr.audio-uk, table.text-sb tr.text-sb, table.audio-sb tr.audio-sb, table.text-sk tr.text-sk, table.audio-sk tr.audio-sk, table.text-be tr.text-be, table.audio-be tr.audio-be, table.text-ca tr.text-ca, table.audio-ca tr.audio-ca, table.text-he tr.text-he, table.audio-he tr.audio-he, table.text-is tr.text-is, table.audio-is tr.audio-is, table.text-fa tr.text-fa, table.audio-fa tr.audio-fa, table.text-gog_IN tr.text-gog_IN, table.audio-gog_IN tr.audio-gog_IN,  table.all tr {
+                                                                                                                       display: table-row;}
+    </style>
+</head>
+<body>
+
+<a class="gh" href="https://github.com/Bunkerbewohner/video-games-by-language">github.com/Bunkerbewohner/video-games-by-languages</a>
+<h1>Icelandic Video Games | Íslenska</h1>
+
+<p>These are games which have been translated to Icelandic.</p>
+
+<table class="all">
+    <thead>
+    <tr>
+        <th>Games <span id="count">(3)</span></th>
+        <th><label><input type="checkbox" class="audio" onchange="toggleLanguage()" value="is"/> Audio</label></th>
+        <th>Genres</th>
+        <th>Works On</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="game text-br text-cn text-da text-de text-en text-es text-fi text-fr text-is text-it text-jp text-no text-pt text-ru text-sv  ">
+        <td><a href="https://www.gog.com/game/kingdom_new_lands">Kingdom: New Lands</a></td>
+        <td></td>
+        <td>
+            <ul class="genres">
+                <li>Strategie</li>
+                <li>Simulation</li>
+                <li>Fantasy</li>
+            </ul>
+        </td>
+        <td>
+            <ul class="os">
+                <li>Windows
+                
+                <li>Linux
+            </ul>
+        </td>
+    </tr>
+    <tr class="game text-br text-cn text-da text-de text-en text-es text-fi text-fr text-is text-it text-jp text-nl text-no text-pt text-ru text-sv  ">
+        <td><a href="https://www.gog.com/game/kingdom_new_lands_royal_edition">Kingdom: New Lands Royal Edition</a></td>
+        <td></td>
+        <td>
+            <ul class="genres">
+                <li>Strategie</li>
+                <li>Simulation</li>
+                <li>Fantasy</li>
+            </ul>
+        </td>
+        <td>
+            <ul class="os">
+                <li>Windows
+                
+                <li>Linux
+            </ul>
+        </td>
+    </tr>
+    <tr class="game text-br text-cn text-de text-en text-es text-fr text-is text-it text-jp text-pl text-ru  audio-is ">
+        <td><a href="https://www.gog.com/game/jotun">Jotun: Valhalla Edition</a></td>
+        <td><span title=" Audio supported">🔊</span></td>
+        <td>
+            <ul class="genres">
+                <li>Rollenspiel</li>
+                <li>Action</li>
+                <li>Fantasy</li>
+            </ul>
+        </td>
+        <td>
+            <ul class="os">
+                <li>Windows
+                <li>Mac
+                <li>Linux
+            </ul>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

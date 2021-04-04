@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ languageNameInEnglish }} Video Games | {{ languageName }}</title>
+    <script>
+        const games = {{{gamesJson}}};
+        const languageNameToCode = {{{languageNameToCodeJSON}}};
+        const codeToLanguageName = Object.assign({}, ...Object.entries(languageNameToCode).map(([a,b]) => ({ [b]: a })));
+        let textLanguages = [];
+        let audioLanguages = [];
+
+        function updateCount() {
+            const count = games.filter(supportsSelectedLanguages).length;
+            document.querySelector('#count').innerHTML = `(${count})`;
+        }
+
+        function supportsSelectedLanguages(game) {
+            const supportsSomeTextLanguages = textLanguages.filter(lang => Object.keys(game.languages).indexOf(lang) >= 0).length > 0;
+            const supportsSomeAudioLanguages = audioLanguages.filter(code => game.supportedAudioLanguages.indexOf(codeToLanguageName[code]) >= 0).length > 0;
+
+            if (textLanguages.length > 0 && audioLanguages.length > 0) {
+                return supportsSomeTextLanguages || supportsSomeAudioLanguages;
+            } else if (textLanguages.length > 0) {
+                return supportsSomeTextLanguages;
+            } else if (audioLanguages.length > 0) {
+                return supportsSomeAudioLanguages;
+            } else {
+                return true;
+            }
+        }
+
+        function toggleLanguage() {
+            textLanguages = [...document.querySelectorAll('input.text[type=checkbox]:checked').values()]
+                .map(input => input.value);
+            audioLanguages = [...document.querySelectorAll('input.audio[type=checkbox]:checked').values()]
+                .map(input => input.value);
+
+            // count games who support at least one of the selected languages
+            updateCount();
+
+            // only display games that support one of the selected languages
+            const textClass = textLanguages.map(l => `text-${l}`).join(" ");
+            const audioClass = audioLanguages.map(l => `audio-${l}`).join(" ");
+            document.querySelector("table").className = (textClass || audioClass) ? (textClass + " " + audioClass) : "all";
+        }
+    </script>
+    <style>
+        html {
+            overflow: scroll-y;
+        }
+
+        html, body {
+            font-family: sans-serif;
+        }
+
+        label {
+            padding: 4px 8px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        label:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        ul {
+            list-style-type: none;
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            display: inline-block;
+            margin: 0 10px 0 0;
+            padding: 0;
+        }
+
+        a.gh {
+            float: right;
+            font-size: 1rem;
+            padding: 5px;
+        }
+
+        tbody tr {
+            display: none;
+        }
+
+        tbody tr:nth-child(2n) {
+            background-color: #eee;
+        }
+
+        {{#each languages}}table.text-{{code}} tr.text-{{code}}, table.audio-{{code}} tr.audio-{{code}}, {{/each}} table.all tr {
+                                                                                                                       display: table-row;}
+    </style>
+</head>
+<body>
+
+<a class="gh" href="https://github.com/Bunkerbewohner/video-games-by-language">github.com/Bunkerbewohner/video-games-by-languages</a>
+<h1>{{languageNameInEnglish}} Video Games | {{languageName}}</h1>
+
+<p>These are games which have been translated to {{languageNameInEnglish}}.</p>
+
+<table class="all">
+    <thead>
+    <tr>
+        <th>Games <span id="count">({{numGames}})</span></th>
+        <th><label><input type="checkbox" class="audio" onchange="toggleLanguage()" value="{{languageCode}}"/> Audio</label></th>
+        <th>Genres</th>
+        <th>Works On</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each games}}
+    <tr class="game {{#each textLanguages}}text-{{this}} {{/each}} {{#each audioLanguages}}audio-{{this}} {{/each}}">
+        <td><a href="{{links.product_card}}">{{title}}</a></td>
+        <td>{{#if audioSupport}}<span title="{{languageName}} Audio supported">🔊</span>{{/if}}</td>
+        <td>
+            <ul class="genres">
+                {{#each genres}}
+                <li>{{this}}</li>
+                {{/each}}
+            </ul>
+        </td>
+        <td>
+            <ul class="os">
+                {{#if worksOn.Windows}}<li>Windows{{/if}}
+                {{#if worksOn.Mac}}<li>Mac{{/if}}
+                {{#if worksOn.Linux}}<li>Linux{{/if}}
+            </ul>
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>
+
+</body>
+</html>
